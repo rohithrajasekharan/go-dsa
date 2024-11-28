@@ -20,7 +20,7 @@ func (ll *LinkedList) InsertFront(data string) {
 func (ll *LinkedList) InsertEnd(data string) {
 	newNode := &Node{
 		value: data,
-		next:  ll.head,
+		next:  nil,
 	}
 	if ll.head == nil {
 		ll.head = newNode
@@ -43,9 +43,17 @@ func (ll *LinkedList) InsertAfter(after, data string) bool {
 	}
 	newNode := &Node{
 		value: data,
-		next:  nil,
+		next:  current.next,
 	}
 	current.next = newNode
+	return true
+}
+
+func (ll *LinkedList) DeleteFront() bool {
+	if ll.head == nil {
+		return false
+	}
+	ll.head = ll.head.next
 	return true
 }
 
@@ -54,16 +62,21 @@ func (ll *LinkedList) Delete(data string) bool {
 		return false
 	}
 	if ll.head.value == data {
-		ll.head = nil
+		ll.head = ll.head.next
 		return true
 	}
-	ll.head = ll.head.next
-	return true
+	current := ll.head
+	for current.next != nil && current.next.value != data {
+		current = current.next
+	}
+	if current.next == nil {
+		return false
+	} else {
+		current.next = current.next.next
+		return true
+	}
 }
 
-func (ll *LinkedList) DeleteFront() bool {
-	return false
-}
 func (ll *LinkedList) Print() {
 	current := ll.head
 	for current != nil {
